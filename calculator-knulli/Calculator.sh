@@ -1,13 +1,7 @@
-#!/bin/bash
-# Calculator App for RG34xxsp (KNULLI)
-# Portable launcher script
-
-# Get the directory where this script is located
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
-# Set up library paths
-export LD_LIBRARY_PATH="/usr/lib:$LD_LIBRARY_PATH"
-
-# Launch calculator
-cd "$SCRIPT_DIR"
-exec ./calculator
+#!/bin/sh
+# Calculator launcher for KNULLI
+cd "$(dirname "$0")"
+export LD_LIBRARY_PATH=".:$LD_LIBRARY_PATH"
+export SDL_VIDEODRIVER=kmsdrm
+export SDL_AUDIODRIVER=alsa
+./calculator
