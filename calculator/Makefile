@@ -24,12 +24,12 @@ CFLAGS += -DHANDHELD
 INCLUDES = -I$(SDL2_DIR)/include
 INCLUDES += -I/usr/aarch64-linux-gnu/include
 
-# Library paths
-LDFLAGS = -L$(SDL2_DIR)/lib
-LDFLAGS += -L/usr/aarch64-linux-gnu/lib
+# Library paths (dynamic linking - libraries must be on device)
+LDFLAGS = -L$(SDL2_DIR)/lib -L/usr/aarch64-linux-gnu/lib
 
-# Libraries to link
+# Libraries to link (will be resolved at runtime on device)
 LIBS = -lSDL2 -lSDL2_ttf -lfreetype -lpthread -lm -ldl
+LIBS += -Wl,--allow-shlib-undefined -Wl,--unresolved-symbols=ignore-all
 
 # Build targets
 .PHONY: all clean install
