@@ -1,0 +1,29 @@
+# Build artifacts
+build/
+*.o
+*.so
+*.a
+
+# Executable
+calculator
+
+# SDL2 libraries (users should download these separately)
+SDL2/lib/*
+SDL2/include/*
+!SDL2/lib/.gitkeep
+!SDL2/include/.gitkeep
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Debug files
+*.log
+*.dSYM/

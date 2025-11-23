@@ -1,0 +1,4 @@
+# Place SDL2 ARM64 libraries here:
+# - libSDL2.so
+# - libSDL2_ttf.so
+# - libfreetype.so (if needed)
