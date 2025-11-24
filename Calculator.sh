@@ -1,27 +1,35 @@
-#!/bin/sh
-# Calculator for KNULLI - Direct EmulationStation launcher
+#!/bin/bash
+# Calculator for KNULLI/Batocera
+# Based on official Batocera ports structure
 
-PORTDIR="/userdata/roms/ports"
+# Get the directory where this script lives
+DIR="$(dirname "$(readlink -f "$0")")"
 
-cd "$PORTDIR"
+# Change to that directory
+cd "${DIR}"
 
-# Set up SDL
+# Set up library paths
+export LD_LIBRARY_PATH="${DIR}:${LD_LIBRARY_PATH}"
+
+# Set up SDL for the handheld
 export SDL_VIDEODRIVER=kmsdrm
 export SDL_AUDIODRIVER=alsa
-export LD_LIBRARY_PATH="$PORTDIR:$LD_LIBRARY_PATH"
 
-# Make sure binary is executable
-chmod +x "$PORTDIR/calculator"
+# Ensure binary is executable
+chmod +x "${DIR}/calculator"
 
-# Run calculator with error output
-echo "Starting calculator..." > /tmp/calculator.log
-"$PORTDIR/calculator" >> /tmp/calculator.log 2>&1
+# Run calculator and log output
+"${DIR}/calculator" 2>&1 | tee /tmp/calculator.log
 
-# Show exit code
+# Capture exit code
 EXIT_CODE=$?
-echo "Exit code: $EXIT_CODE" >> /tmp/calculator.log
 
+# If it failed, show the log briefly
 if [ $EXIT_CODE -ne 0 ]; then
-    echo "Calculator failed. Check /tmp/calculator.log"
+    echo ""
+    echo "Calculator exited with error code: $EXIT_CODE"
+    echo "Check /tmp/calculator.log for details"
     sleep 3
 fi
+
+exit $EXIT_CODE
