@@ -1,35 +1,48 @@
 #!/bin/bash
-# Calculator for KNULLI/Batocera
-# Based on official Batocera ports structure
+# Calculator - PortMaster Compatible Port
+# Based on PortMaster packaging guide: https://portmaster.games/packaging.html
 
-# Get the directory where this script lives
-DIR="$(dirname "$(readlink -f "$0")")"
+XDG_DATA_HOME=${XDG_DATA_HOME:-$HOME/.local/share}
 
-# Change to that directory
-cd "${DIR}"
+# Detect PortMaster control folder across different CFWs
+if [ -d "/opt/system/Tools/PortMaster/" ]; then
+  controlfolder="/opt/system/Tools/PortMaster"
+elif [ -d "/opt/tools/PortMaster/" ]; then
+  controlfolder="/opt/tools/PortMaster"
+elif [ -d "$XDG_DATA_HOME/PortMaster/" ]; then
+  controlfolder="$XDG_DATA_HOME/PortMaster"
+else
+  controlfolder="/roms/ports/PortMaster"
+fi
 
-# Set up library paths
-export LD_LIBRARY_PATH="${DIR}:${LD_LIBRARY_PATH}"
+# Source control.txt to get device-specific variables
+source $controlfolder/control.txt
+# Source CFW-specific modifications if they exist
+[ -f "${controlfolder}/mod_${CFW_NAME}.txt" ] && source "${controlfolder}/mod_${CFW_NAME}.txt"
+# Get controller configuration
+get_controls
 
-# Set up SDL for the handheld
+# Set up game directory
+GAMEDIR="/$directory/ports"
+
+# Export controller configuration for SDL
+export SDL_GAMECONTROLLERCONFIG="$sdl_controllerconfig"
+
+# Set up library path for device architecture
+export LD_LIBRARY_PATH="$GAMEDIR:$GAMEDIR/libs:$LD_LIBRARY_PATH"
+
+# Configure SDL for the device
 export SDL_VIDEODRIVER=kmsdrm
 export SDL_AUDIODRIVER=alsa
 
+# Change to game directory
+cd $GAMEDIR
+
 # Ensure binary is executable
-chmod +x "${DIR}/calculator"
+$ESUDO chmod +x "$GAMEDIR/calculator"
 
-# Run calculator and log output
-"${DIR}/calculator" 2>&1 | tee /tmp/calculator.log
+# Run calculator with logging
+$ESUDO "$GAMEDIR/calculator" 2>&1 | tee /tmp/calculator.log
 
-# Capture exit code
-EXIT_CODE=$?
-
-# If it failed, show the log briefly
-if [ $EXIT_CODE -ne 0 ]; then
-    echo ""
-    echo "Calculator exited with error code: $EXIT_CODE"
-    echo "Check /tmp/calculator.log for details"
-    sleep 3
-fi
-
-exit $EXIT_CODE
+# Cleanup and return to EmulationStation
+pm_finish
