@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<gameList>
+  <game>
+    <path>./Calculator.sh</path>
+    <name>Calculator</name>
+    <desc>Full-featured calculator application with basic arithmetic operations (+, -, ×, ÷), decimal point support, and 16-digit precision. Features include Clear (C), All Clear (AC), and Delete functions. Optimized for 720x480 resolution with color-coded buttons for easy navigation.
+
+Controls:
+- D-Pad: Navigate between calculator buttons
+- A Button: Press the selected button
+- B/Start/Select: Exit calculator</desc>
+    <image>./screenshot.png</image>
+    <releasedate>20251123</releasedate>
+    <developer>Claude</developer>
+    <publisher>PortsMaster</publisher>
+    <genre>Utility</genre>
+  </game>
+</gameList>

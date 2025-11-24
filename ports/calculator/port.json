@@ -1,0 +1,29 @@
+{
+  "version": 2,
+  "name": "Calculator",
+  "items": [
+    "Calculator.sh",
+    "calculator"
+  ],
+  "items_opt": null,
+  "attr": {
+    "title": "Calculator",
+    "desc": "Full-featured calculator app with basic arithmetic operations, decimal support, and 16-digit precision. Optimized for RG34xxsp.",
+    "inst": "Ready to calculate!",
+    "genres": [
+      "utility"
+    ],
+    "porter": [
+      "Claude"
+    ],
+    "image": {
+      "screenshot": "screenshot.png"
+    },
+    "rtr": true,
+    "runtime": null,
+    "reqs": [],
+    "arch": [
+      "aarch64"
+    ]
+  }
+}

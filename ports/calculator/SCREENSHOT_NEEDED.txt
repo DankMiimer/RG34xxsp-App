@@ -1,0 +1,9 @@
+A screenshot.png file (minimum 640x480) is required for PortsMaster submission.
+
+To add a screenshot:
+1. Run the calculator on your RG34xxsp
+2. Take an in-game screenshot
+3. Save it as screenshot.png in this directory
+4. Delete this SCREENSHOT_NEEDED.txt file
+
+The screenshot should show the calculator interface in action.
