@@ -19,6 +19,8 @@ SOURCES = $(SRC_DIR)/calculator.c
 # Compiler flags
 CFLAGS = -std=c99 -O2 -Wall -Wextra
 CFLAGS += -DHANDHELD
+# Disable fortify to avoid glibc 2.34 requirement
+CFLAGS += -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=0
 
 # Include paths
 INCLUDES = -I$(SDL2_DIR)/include
