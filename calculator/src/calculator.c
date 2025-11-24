@@ -304,20 +304,28 @@ void render_display(SDL_Renderer* renderer, TTF_Font* font) {
 }
 
 int main(int argc, char* argv[]) {
+    fprintf(stderr, "Calculator starting...\n");
+    fprintf(stderr, "Screen: %dx%d\n", SCREEN_WIDTH, SCREEN_HEIGHT);
+
     // Initialize SDL
+    fprintf(stderr, "Initializing SDL...\n");
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER) != 0) {
         fprintf(stderr, "SDL_Init Error: %s\n", SDL_GetError());
         return 1;
     }
+    fprintf(stderr, "SDL initialized successfully\n");
 
     // Initialize SDL_ttf
+    fprintf(stderr, "Initializing SDL_ttf...\n");
     if (TTF_Init() != 0) {
         fprintf(stderr, "TTF_Init Error: %s\n", TTF_GetError());
         SDL_Quit();
         return 1;
     }
+    fprintf(stderr, "SDL_ttf initialized successfully\n");
 
     // Create window
+    fprintf(stderr, "Creating window...\n");
 #ifdef HANDHELD
     SDL_Window* window = SDL_CreateWindow("Calculator",
         SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
@@ -336,8 +344,10 @@ int main(int argc, char* argv[]) {
         SDL_Quit();
         return 1;
     }
+    fprintf(stderr, "Window created successfully\n");
 
     // Create renderer
+    fprintf(stderr, "Creating renderer...\n");
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1,
         SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     if (!renderer) {
@@ -347,23 +357,39 @@ int main(int argc, char* argv[]) {
         SDL_Quit();
         return 1;
     }
+    fprintf(stderr, "Renderer created successfully\n");
 
-    // Load font
-    TTF_Font* font = TTF_OpenFont("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 32);
-    if (!font) {
-        // Try alternative font locations
-        font = TTF_OpenFont("/usr/share/fonts/TTF/DejaVuSans-Bold.ttf", 32);
-        if (!font) {
-            font = TTF_OpenFont("./font.ttf", 32);
-            if (!font) {
-                fprintf(stderr, "TTF_OpenFont Error: %s\n", TTF_GetError());
-                SDL_DestroyRenderer(renderer);
-                SDL_DestroyWindow(window);
-                TTF_Quit();
-                SDL_Quit();
-                return 1;
-            }
+    // Load font - try multiple locations
+    const char* font_paths[] = {
+        "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
+        "/usr/share/fonts/TTF/DejaVuSans-Bold.ttf",
+        "/usr/share/fonts/dejavu/DejaVuSans-Bold.ttf",
+        "/usr/share/fonts/truetype/DejaVuSans-Bold.ttf",
+        "/storage/roms/ports/calculator/font.ttf",
+        "/userdata/roms/ports/calculator/font.ttf",
+        "./font.ttf",
+        "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+        "/usr/share/fonts/TTF/DejaVuSans.ttf",
+        NULL
+    };
+
+    TTF_Font* font = NULL;
+    for (int i = 0; font_paths[i] != NULL; i++) {
+        font = TTF_OpenFont(font_paths[i], 32);
+        if (font) {
+            fprintf(stderr, "Loaded font from: %s\n", font_paths[i]);
+            break;
         }
+    }
+
+    if (!font) {
+        fprintf(stderr, "TTF_OpenFont Error: Could not find any font file!\n");
+        fprintf(stderr, "Last error: %s\n", TTF_GetError());
+        SDL_DestroyRenderer(renderer);
+        SDL_DestroyWindow(window);
+        TTF_Quit();
+        SDL_Quit();
+        return 1;
     }
 
     // Initialize buttons
